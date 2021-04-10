@@ -21,11 +21,17 @@ const fallbackBasePlayerObject = {
 }
 
 module.exports = {
+  visualWarn(message) {
+    return console.warn(`%c${message.toString()}`, "color: yellow")
+  },
+  visualError(message, isThrow) {
+    if (!isThrow) return console.error(`%c${message.toString()}`, "color: red"); else return throw new Error(`%c${message.toString()}`, "color: red")
+  },
   Player: class Player {
     constructor(basePlayerObject) {
       this.base = basePlayerObject || fallbackBasePlayerObject // This should be the same memory address. "??" is not used here since we don't want falsy values anyway.
-      if (this.base === fallbackBasePlayerObject) console.warn("An instanceof Player was created, but the basePlayerObject provided was falsy. Using fallbackBasePlayerObject.")
-      if (typeof this.base !== "object") console.warn(`An instanceof Player was created, but the basePlayerObject provided was not an object, and instead ${typeof basePlayerObject}. Using fallbackBasePlayerObject.`)
+      if (this.base === fallbackBasePlayerObject) this.visualWarn("An instanceof Player was created, but the basePlayerObject provided was falsy. Using fallbackBasePlayerObject.")
+      if (typeof this.base !== "object") this.visualWarn(`An instanceof Player was created, but the basePlayerObject provided was not an object, and instead ${typeof basePlayerObject}. Using fallbackBasePlayerObject.`)
       this.maxHP = Number.parseInt(this.base.maxHP)
       this.initialHP = Number.parseInt(this.base.initialHP)
       this.HP = this.initialHP
